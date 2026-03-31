@@ -178,3 +178,10 @@ def monthToStr(date, rp: bool = False, socr: bool = False):
                     return months[j][1]
                 return months[j][0]
     return ''
+
+
+def get_quarter(input_date: datetime.datetime):
+    """Получить квартал для даты (1-4)
+       :param input_date: дата
+    """
+    return (input_date.month - 1) // 3 + 1

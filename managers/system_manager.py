@@ -143,3 +143,18 @@ def search_process(q: list):
                 process['started'] = started.strftime('%H:%M:%S %d-%m-%Y')
             return process
     return None
+
+
+def extract_archive(archive: str):
+    """Распаковывает tar.gz
+    """
+    import tarfile
+    tree = []
+    path = os.path.abspath(os.path.dirname(archive))
+    if tarfile.is_tarfile(archive):
+        tar = tarfile.open(archive, 'r:gz')
+        tar.extractall(path=path)
+        tree = tar.getnames()
+        tar.close()
+        return tree
+
