@@ -46,6 +46,32 @@ def get_hostname():
     return socket.gethostname()
 
 
+def get_ip(ip: str = '8.8.8.8'):
+    """Возвращаем ip хоста
+       :param ip: к какому адресу пробуем достучаться
+    """
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        s.connect((ip, 1))
+        ip = s.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        s.close()
+    return ip
+
+
+def get_host_data():
+    """Возращает данные по хосту
+       ('imac.local', [], ['127.0.0.1', '192.168.0.100'])
+    """
+    data = socket.gethostbyname_ex(socket.gethostname())
+    return {
+        'hostname': data[0],
+        'ips': data[2],
+    }
+
+
 def get_hd_space(dev: str = '/'):
     """Получить информацию по месту на диске в МБ
        :param dev: точка монтирования
