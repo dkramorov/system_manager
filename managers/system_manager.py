@@ -7,6 +7,27 @@ import socket
 import subprocess
 
 
+def run_in_subprocess(executable: str = None, args: list = None):
+    """Выполнение команды в новом процессе, который не связан с текущим
+       :param executable: исполняемая программа (например, python)
+       :param args: аргументы, например, ['manage.py', 'tasks', '--backup_id=1']
+                    manage_py_path = os.path.join(settings.BASE_DIR, 'manage.py')
+    """
+    if not executable:
+        # Путь к текущему python (в т.ч. из env)
+        executable = sys.executable
+    cmd = [
+        executable,
+        *args,
+    ]
+    # Для Linux/macOS: запускаем процесс в новой сессии (убирает привязку к терминалу)
+    subprocess.Popen(
+        cmd,
+        start_new_session=True,
+        close_fds=True,
+    )
+
+
 def system_cmd(cmd: list):
     """Выполнить системную команду, например, "which pg_dump"
        :param cmd: команда списком, например, ["cat", "/etc/"]
@@ -183,4 +204,3 @@ def extract_archive(archive: str):
         tree = tar.getnames()
         tar.close()
         return tree
-
