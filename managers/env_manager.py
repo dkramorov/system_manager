@@ -2,8 +2,7 @@ import os
 from dotenv import find_dotenv, load_dotenv
 
 
-# Поиск от рабочей папки
-env_path = find_dotenv(usecwd=True)
+env_path = find_dotenv(usecwd=True)  # Поиск от рабочей папки
 
 
 if env_path:
@@ -18,6 +17,7 @@ class MockSettings:
 
 
 settings_key = 'FULL_SETTINGS_SET'
+settings_configs = {}
 
 
 try:
@@ -48,15 +48,23 @@ def get_configs(prefix: str = 'PREFIX_', app: str = 'APP_') -> dict:
     if not isinstance(s, dict):
         raise Exception('settings.%s is not dict' % settings_key)
     name_starts_with = '%s%s' % (prefix, app)
-    configs = {}
+
     key = prefix[:-1].lower()
+    app = app[:-1].lower()
+    if app in settings_configs and key in settings_configs[app]:
+        return settings_configs[app]
+
+    configs = {}
     for k, v in s.items():
         if not k.startswith(name_starts_with) or not k.replace(name_starts_with, ''):
             continue
-        if not key in configs:
-            configs[key] = {}
+        if not app in configs:
+            configs[app] = {}
+        if not key in configs[app]:
+            configs[app][key] = {}
         name = k.split(name_starts_with, 1)[-1]
-        configs[key][name] = v
-    if not configs.get(key):
+        configs[app][key][name] = v
+    if not configs.get(app, {}).get(key, {}):
         raise Exception('there are no configs %s found' % name_starts_with)
-    return configs
+    settings_configs[app] = configs[app]
+    return settings_configs[app]
