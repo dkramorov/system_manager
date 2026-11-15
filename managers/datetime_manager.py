@@ -53,7 +53,9 @@ def date_to_timestamp(date):
 
 
 def timestamp_to_date(stamp):
-    """time.time() to datetime.datetime"""
+    """time.time() to datetime.datetime
+       :param stamp: timestamp
+    """
     try:
         stamp = int(stamp)
     except ValueError:

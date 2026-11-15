@@ -1,6 +1,12 @@
 import os
 
 
+def get_cwd():
+    """Определить текущую рабочую директорию
+    """
+    return os.getcwd()
+
+
 def isfile(path: str):
     """Проверка, что переданный путь является файлом
        :param path: путь к файлу
